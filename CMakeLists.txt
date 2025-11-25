@@ -178,12 +178,18 @@ ADD_CUSTOM_TARGET(placo_utils_files ALL
                   )
 
 if (APPLE)
-set_target_properties(placo PROPERTIES INSTALL_RPATH "@loader_path/../..")
+set_target_properties(placo PROPERTIES INSTALL_RPATH "@loader_path;@loader_path/../..")
 set_target_properties(libplaco PROPERTIES INSTALL_RPATH "@loader_path")
 else()
-set_target_properties(placo PROPERTIES INSTALL_RPATH "\$ORIGIN/../..")
+# $ORIGIN allows finding liblibplaco.so in the same directory (for conda/pip installs)
+# $ORIGIN/../.. allows finding it in lib/ when installed to lib/python*/site-packages/
+set_target_properties(placo PROPERTIES INSTALL_RPATH "\$ORIGIN:\$ORIGIN/../..")
 set_target_properties(libplaco PROPERTIES INSTALL_RPATH "\$ORIGIN")
 endif()
+
+# Use INSTALL_RPATH during build as well (so copying build artifacts works without patchelf)
+set_target_properties(placo PROPERTIES BUILD_WITH_INSTALL_RPATH TRUE)
+set_target_properties(libplaco PROPERTIES BUILD_WITH_INSTALL_RPATH TRUE)
 
 install(TARGETS libplaco DESTINATION lib)
 install(TARGETS placo DESTINATION ${PYTHON_SITELIB})
