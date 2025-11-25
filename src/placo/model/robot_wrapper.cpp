@@ -9,6 +9,7 @@
 #include "pinocchio/algorithm/centroidal.hpp"
 #include "pinocchio/collision/collision.hpp"
 #include "pinocchio/collision/distance.hpp"
+#include "hpp/fcl/collision_data.h"
 #include "placo/tools/utils.h"
 #include <boost/filesystem.hpp>
 #include <json/json.h>
@@ -459,7 +460,7 @@ std::vector<RobotWrapper::Collision> RobotWrapper::self_collisions(bool stop_at_
   for (size_t k = 0; k < collision_model.collisionPairs.size(); ++k)
   {
     const pinocchio::CollisionPair& cp = collision_model.collisionPairs[k];
-    const coal::CollisionResult& cr = geom_data.collisionResults[k];
+    const hpp::fcl::CollisionResult& cr = geom_data.collisionResults[k];
 
     if (cr.isCollision())
     {
@@ -499,7 +500,7 @@ std::vector<RobotWrapper::Distance> RobotWrapper::distances()
   for (size_t k = 0; k < collision_model.collisionPairs.size(); ++k)
   {
     const pinocchio::CollisionPair& cp = collision_model.collisionPairs[k];
-    const coal::DistanceResult& dr = geom_data.distanceResults[k];
+    const hpp::fcl::DistanceResult& dr = geom_data.distanceResults[k];
 
     Distance distance;
     distance.objA = cp.first;
